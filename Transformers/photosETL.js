@@ -58,13 +58,11 @@ const Photo = require('../Models/Photo.model');
           buffer.push(photoData);
           counter++;
 
-          console.log(photoData);
-
           // Account for size of data in buffer
-          if (counter > 20) {
+          if (counter > 3000) {
             // Pause Stream to insert data to DB
               stream.pause()
-              // Test.insertMany(buffer);
+              Photo.insertMany(buffer);
 
               // Reset Counter and buffer then resume stream
               counter = 0;
@@ -79,7 +77,7 @@ const Photo = require('../Models/Photo.model');
 
         //If any data is left, add to DB
         if ( counter > 0 ) {
-          // Test.insertMany(buffer);
+          Photo.insertMany(buffer);
           buffer = [];
           counter = 0;
           console.log('Finished Final Batch')
