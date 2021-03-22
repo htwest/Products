@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-  // Test Schema for CSV transform
 const PhotoSchema = new Schema({
-  id: String,
+  id: Number,
   styleId: Number,
   url: String,
   thumbnail_url: String,

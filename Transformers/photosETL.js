@@ -1,8 +1,12 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const config = require('../config.js');
+const { Readable } = require('stream');
+const csv = require('csv-parser');
 
 const Photo = require('../Models/Photo.model');
+
+let fragment;
 
 (async function() {
 
@@ -18,24 +22,39 @@ const Photo = require('../Models/Photo.model');
   await new Promise((resolve,reject) => {
     // Create Buffer to hold Documents
     let buffer = [];
+
     // Create counters to use for keeping track of data progress
+    // counter is used for breaking up the documents into smaller segments
+    // lineCounter is used for bug-testing
+    // batchCounter is used to keep track of the batches being imported into DB
     let counter = 0;
+    let lineCounter = 0;
     let batchCounter = 0;
+    let data = []
 
     // Create read stream to parse csv file
-    let stream = fs.createReadStream('../Resources/photosTester.csv')
+    let stream = fs.createReadStream('../Resources/photos.csv');
+    stream
       .on("error", reject)
-      .on("data", async data => {
-        // Parse Data into seperate arrays
-        let newData = data.toString().split("\n");
+      .on("data", chunk => {
+
+        // Parse Data into seperate arrays, removing header fields
+        var chunk = chunk.toString().split("\n")
+        if (chunk[lineCounter] === 'id, styleId, url, thumbnail_url') {
+          chunk.shift();
+        }
 
         // Iterate over every Data entry
-        newData.forEach((entry) => {
+        chunk.forEach((entry) => {
+          lineCounter++;
+
           // Split single string up by commas
-          let splitEntry = entry.split(/,/);
+          let splitEntry = entry.split(",");
           let entryArr = []
+
           // Iterate over comma seperated string
           splitEntry.forEach((item) => {
+
             // Remove all double quotes from each item to clean
             if (item[0] === '"') {
               item = item.substring(1, item.length);
@@ -47,44 +66,33 @@ const Photo = require('../Models/Photo.model');
             entryArr.push(item);
           })
 
+          // if (isNaN(parseInt(entryArr[0])) || isNaN(parseInt(entryArr[1]))) {
+          //   if (fragment) {
+          //     console.log('FullLine', fragment + entry);
+          //     fragment = '';
+          //   } else {
+          //     fragment = entry;
+          //     console.log('Fragment Saved', fragment);
+          //   }
+          //   return;
+          // }
+
           // Map item entries to Schema
           const photoData = new Photo({
-            id: entryArr[0],
-            styleId: entryArr[1],
+            id: parseInt(entryArr[0]),
+            styleId: parseInt(entryArr[1]),
             url: entryArr[2],
             thumbnail_url: entryArr[3],
           })
-          // Push document to buffer
-          buffer.push(photoData);
-          counter++;
+          .save();
 
-          // Account for size of data in buffer
-          if (counter > 3000) {
-            // Pause Stream to insert data to DB
-              stream.pause()
-              Photo.insertMany(buffer);
-
-              // Reset Counter and buffer then resume stream
-              counter = 0;
-              buffer = [];
-              batchCounter++
-              console.log(`Finished Batch ${batchCounter}`)
-              stream.resume();
-          }
         })
+        // stream.resume();
       })
       .on("end", async () => {
 
-        //If any data is left, add to DB
-        if ( counter > 0 ) {
-          Photo.insertMany(buffer);
-          buffer = [];
-          counter = 0;
-          console.log('Finished Final Batch')
-          resolve();
-          }
-        console.log("ENDED")
+        console.log('ENDED');
       });
 
-  });
+  })
 })()
