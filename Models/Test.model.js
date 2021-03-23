@@ -3,12 +3,13 @@ const Schema = mongoose.Schema;
 
   // Test Schema for CSV transform
 const TestSchema = new Schema({
-  id: String,
-  genreID: String,
+  id: Number,
+  genre: String,
   name: String,
-  age: String,
-  location: String
+  age: Schema.Types.Mixed,
+  location: String,
+  test: Schema.Types.Mixed
 });
 
 
-module.exports = mongoose.model('Test', TestSchema);
+module.exports = mongoose.model('character', TestSchema);

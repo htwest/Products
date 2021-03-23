@@ -6,7 +6,7 @@ testRouter.use(express.json());
 
 // localhost:3000/test
 testRouter.get('/', (req, res) => {
-  res.send('Test is working')
+  res.send(req.query)
 });
 
 // localhost:3000/test/more
