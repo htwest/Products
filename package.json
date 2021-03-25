@@ -13,10 +13,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+<<<<<<< HEAD
     "csv-parser": "^3.0.0",
     "express": "^4.17.1",
     "mongoose": "^5.12.0",
     "nodemon": "^2.0.7",
     "split": "^1.0.1"
+=======
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7"
+>>>>>>> 8042b8b7058d438fd70b0d33c0a4422177082d93
   }
 }
