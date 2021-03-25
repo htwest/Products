@@ -1,6 +1,6 @@
 const express = require('express');
 const testRouter = express.Router();
-const Test = require('../Models/Test.model');
+const Test = require('../Models/test-models/Test.model');
 
 testRouter.use(express.json());
 

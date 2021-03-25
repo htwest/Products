@@ -7,4 +7,4 @@ const RelatedSchema = new Schema({
   related_product_id: Number
 });
 
-module.exports = mongoose.model('related', RelatedSchema);
+module.exports = mongoose.model('related', RelatedSchema, 'related');

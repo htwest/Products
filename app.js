@@ -17,9 +17,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/test', testRoute);
-
 app.use('/products', productRoute);
-
 
 // CONNECT TO DB and SERVER
 mongoose.connect(config.MONGO, {useNewUrlParser: true, useUnifiedTopology: true});
