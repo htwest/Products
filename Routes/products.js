@@ -18,7 +18,7 @@ productRouter.use(express.json());
 
 // localhost:3000/products
 productRouter.get('/', (req, res) => {
-  let count = req.query.count || 5;
+  // let count = req.query.count || 5;
   Product
     .find({}, (err, result) => {
       if (err) {
@@ -27,7 +27,10 @@ productRouter.get('/', (req, res) => {
         res.send(result);
       }
     })
-    .limit(count);
+    // .limit(count);
+    // .catch((err) => {
+    //   console.log(err);
+    // })
 });
 
 productRouter.get('/:product_id', (req, res) => {
