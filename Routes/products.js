@@ -28,9 +28,9 @@ productRouter.get('/', (req, res) => {
       }
     })
     // .limit(count);
-    // .catch((err) => {
-    //   console.log(err);
-    // })
+    .catch((err) => {
+      console.log(err);
+    })
 });
 
 productRouter.get('/:product_id', (req, res) => {
